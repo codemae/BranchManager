@@ -1,0 +1,13 @@
+C:\Repos\BranchManager\BranchManager\BranchManager\bin\Debug\BranchManager.exe.config
+C:\Repos\BranchManager\BranchManager\BranchManager\obj\Debug\BranchManager.csprojResolveAssemblyReference.cache
+C:\Repos\BranchManager\BranchManager\BranchManager\obj\Debug\BranchManager.MainForm.resources
+C:\Repos\BranchManager\BranchManager\BranchManager\obj\Debug\BranchManager.Properties.Resources.resources
+C:\Repos\BranchManager\BranchManager\BranchManager\obj\Debug\BranchManager.csproj.GenerateResource.Cache
+C:\Repos\BranchManager\BranchManager\BranchManager\bin\Debug\BranchManager.exe
+C:\Repos\BranchManager\BranchManager\BranchManager\bin\Debug\BranchManager.pdb
+C:\Repos\BranchManager\BranchManager\BranchManager\bin\Debug\BranchCheck.Core.dll
+C:\Repos\BranchManager\BranchManager\BranchManager\bin\Debug\LibGit2Sharp.dll
+C:\Repos\BranchManager\BranchManager\BranchManager\bin\Debug\BranchCheck.Core.pdb
+C:\Repos\BranchManager\BranchManager\BranchManager\obj\Debug\BranchManager.exe
+C:\Repos\BranchManager\BranchManager\BranchManager\obj\Debug\BranchManager.pdb
+C:\Repos\BranchManager\BranchManager\BranchManager\bin\Debug\Configuration\BranchManager.config

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<Configuration>
+  <Properties>
+    <GitLocation>c:\Repos\uat</GitLocation>
+	  <CommandPromptLocation>C:\Windows\SysWOW64\cmd.exe</CommandPromptLocation>
+	  <RepositoryLocation>c:\Repos\uat</RepositoryLocation>
+	  <User>Nigel Bainbridge</User>
+    <YouTrackBaseURL>youtrack:9111</YouTrackBaseURL>
+  </Properties>
+</Configuration>

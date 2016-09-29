@@ -1,0 +1,6 @@
+C:\Repos\BranchManager\BranchManager\BranchCheck.Core\bin\Debug\BranchCheck.Core.dll
+C:\Repos\BranchManager\BranchManager\BranchCheck.Core\bin\Debug\BranchCheck.Core.pdb
+C:\Repos\BranchManager\BranchManager\BranchCheck.Core\bin\Debug\LibGit2Sharp.dll
+C:\Repos\BranchManager\BranchManager\BranchCheck.Core\obj\Debug\BranchCheck.Core.csprojResolveAssemblyReference.cache
+C:\Repos\BranchManager\BranchManager\BranchCheck.Core\obj\Debug\BranchCheck.Core.dll
+C:\Repos\BranchManager\BranchManager\BranchCheck.Core\obj\Debug\BranchCheck.Core.pdb
