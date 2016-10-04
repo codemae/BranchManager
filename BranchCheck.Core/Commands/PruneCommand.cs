@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace BranchCheck.Core
 {
@@ -14,8 +9,8 @@ namespace BranchCheck.Core
         {
             private string Remote { get; set; }
 
-            public PruneCommand(Process consoleProcess, string promptLine, string remote) 
-                : base(consoleProcess, promptLine)
+            public PruneCommand(Process consoleProcess, string promptLine, int timeout, string remote) 
+                : base(consoleProcess, promptLine, timeout)
             {
                 Remote = remote;
             }
@@ -24,7 +19,7 @@ namespace BranchCheck.Core
             {
                 command = String.Format("git remote prune {0}", Remote);
                 consoleProcess.StandardInput.WriteLine(command);
-                Wait();
+                Wait(gitTimeout);
             }
         }
     }

@@ -1,24 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BranchCheck.Core.Configuration
 {
     public class ManagerConfig
     {
-        public string gitLocation { get; private set; }
+        public string GitLocation { get; private set; }
 
-        public string cmdLocation { get; private set; }
+        public string CmdLocation { get; private set; }
 
-        public string repoLocation { get; private set; }
+        public string RepoLocation { get; private set; }
 
-        public string remoteRepositoryName { get; private set; }
+        public string RemoteRepositoryName { get; private set; }
 
-        public string user { get; private set; }
+        public string User { get; private set; }
 
-        public string youTrackBaseURL { get; private set; }
+        public string YouTrackBaseURL { get; private set; }
+
+        public int GitTimeout { get; private set; }
 
         public ManagerConfig(
             string gitLocation, 
@@ -26,15 +24,22 @@ namespace BranchCheck.Core.Configuration
             string repoLocation, 
             string remoteRepositoryName,
             string user,
-            string youTrackBaseURL
+            string youTrackBaseURL,
+            string gitTimeoutMilliseconds
             )
         {
-            this.gitLocation = gitLocation;
-            this.cmdLocation = cmdLocation;
-            this.repoLocation = repoLocation;
-            this.remoteRepositoryName = remoteRepositoryName;
-            this.user = user;
-            this.youTrackBaseURL = youTrackBaseURL;
+            int timeout;
+            if(!int.TryParse(gitTimeoutMilliseconds, out timeout))
+            {
+                throw new InvalidCastException("Invalid GitTimeoutMilliseconds in BranchManager.config.");
+            }
+            this.GitLocation = gitLocation;
+            this.CmdLocation = cmdLocation;
+            this.RepoLocation = repoLocation;
+            this.RemoteRepositoryName = remoteRepositoryName;
+            this.User = user;
+            this.YouTrackBaseURL = youTrackBaseURL;
+            this.GitTimeout = timeout;
         }
     }                             
 }

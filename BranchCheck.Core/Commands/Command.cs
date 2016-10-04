@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace BranchCheck.Core
 {
@@ -16,12 +12,13 @@ namespace BranchCheck.Core
             protected Process consoleProcess = null;
             protected string promptLine = String.Empty;
             protected string command = String.Empty;
+            protected int gitTimeout;
 
             public string ErrorMessages { get; protected set; }
 
             public string Messages { get; protected set; }
 
-            public Command(Process consoleProcess, string promptLine)
+            public Command(Process consoleProcess, string promptLine, int timeout)
             {
                 if (consoleProcess == null || consoleProcess.HasExited) throw new ArgumentNullException("consoleProcess");
                 if (promptLine == null) throw new ArgumentNullException("promptLine");
@@ -30,6 +27,7 @@ namespace BranchCheck.Core
                 this.promptLine = promptLine;
                 this.Messages = String.Empty;
                 this.ErrorMessages = String.Empty;
+                this.gitTimeout = timeout;
                 consoleProcess.OutputDataReceived += ConsoleProcess_OutputDataReceived;
                 consoleProcess.ErrorDataReceived += ConsoleProcess_OutputDataReceived;
                 waitingForConsole = new EventWaitHandle(false, EventResetMode.ManualReset);
@@ -57,9 +55,9 @@ namespace BranchCheck.Core
                 Messages += String.Format("{0}\r\n", data);
             }
 
-            protected void Wait()
+            protected void Wait(int timeout = 0)
             {
-                waitingForConsole.WaitOne();
+                waitingForConsole.WaitOne(timeout);
             }
 
             protected void Continue()

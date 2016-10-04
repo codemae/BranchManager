@@ -29,7 +29,7 @@ namespace BranchCheck.Core
 
         public YouTrack(ref ManagerConfig managerConfig)
         {
-            this.baseUrl = managerConfig.youTrackBaseURL;
+            this.baseUrl = managerConfig.YouTrackBaseURL;
 
             using (var client = new WebClient())
             {

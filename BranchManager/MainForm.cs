@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using BranchCheck.Core;
 using BranchCheck.Core.Configuration;
@@ -32,19 +26,19 @@ namespace BranchManager
             {
                 configFile = new ConfigFile("Configuration/BranchManager.config");
                 configFile.Read(out managerConfig);
-                gitConsole = new GitConsole(ref managerConfig);
+                git = new Git(ref managerConfig);
+                youTrack = new YouTrack(ref managerConfig);
+
+                gitConsole = new GitConsole(ref managerConfig, git.Config);
                 gitConsole.OutputReceived += Console_OutputReceived;
                 gitConsole.ErrorMessageReceived += Console_ErrorMessageReceived;
-
+                
                 gitConsole.Prune();
                 
                 branchList.Columns.Add("Name", 100);
                 branchList.Columns.Add("Last Committed By", 200);
                 branchList.Columns.Add("Committed Date", 100);
                 branchList.Columns.Add("Has local branch", 200);
-
-                git = new Git(ref managerConfig);
-                youTrack = new YouTrack(ref managerConfig);
 
                 var remoteBranches = git.RemoteBranches()
                                         .Where(x => x.Id.StartsWith("test"))
@@ -96,21 +90,6 @@ namespace BranchManager
             }
         }
 
-        private void Console_OutputReceived(object sender, ConsoleEventArgs e)
-        {
-            MethodInvoker action = delegate
-            {
-                txtOutput.AppendText(String.Format("{0}\r\n", e.Message));
-            };
-
-            this.BeginInvoke(action);
-        }
-
-        private void Console_ErrorMessageReceived(object sender, ConsoleEventArgs e)
-        {
-            MessageBox.Show(e.Message);
-        }
-
         private void localToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var selectedItem = branchList.SelectedItems[0].Tag as CascadeBranch;
@@ -127,6 +106,21 @@ namespace BranchManager
         {
             var selectedItem = branchList.SelectedItems[0].Tag as CascadeBranch;
             gitConsole.DeleteBranch(ref selectedItem, GitConsole.DeleteType.Both);
+        }
+
+        private void Console_OutputReceived(object sender, ConsoleEventArgs e)
+        {
+            MethodInvoker action = delegate
+            {
+                txtOutput.AppendText(String.Format("{0}\r\n", e.Message));
+            };
+
+            this.BeginInvoke(action);
+        }
+
+        private void Console_ErrorMessageReceived(object sender, ConsoleEventArgs e)
+        {
+            MessageBox.Show(e.Message);
         }
     }
 }

@@ -21,6 +21,12 @@ namespace BranchCheck.Core
         private readonly string remoteRepositoryName;
         private Process consoleProcess = null;
         private string promptLine = null;
+        private int timeout;
+        private string user;
+        private string server;
+
+        public event EventHandler<ConsoleEventArgs> OutputReceived;
+        public event EventHandler<ConsoleEventArgs> ErrorMessageReceived;
 
         public enum DeleteType
         {
@@ -28,7 +34,6 @@ namespace BranchCheck.Core
             Local,
             Both
         }
-
         private enum CommandType
         {
             DeleteRemoteBranch,
@@ -36,15 +41,20 @@ namespace BranchCheck.Core
             Status,
             Prune
         }
-        
-        public event EventHandler<ConsoleEventArgs> OutputReceived;
-        public event EventHandler<ConsoleEventArgs> ErrorMessageReceived;
 
-        public GitConsole(ref ManagerConfig managerConfig)
+
+        public GitConsole(ref ManagerConfig managerConfig, GitConfig gitConfig)
         {
-            repositoryPath = managerConfig.repoLocation;
-            gitPath = managerConfig.gitLocation;
-            remoteRepositoryName = managerConfig.remoteRepositoryName;
+            if (managerConfig == null) throw new ArgumentNullException("managerConfig");
+            if (gitConfig == null) throw new ArgumentNullException("gitConfig");
+
+            repositoryPath = managerConfig.RepoLocation;
+            gitPath = managerConfig.GitLocation;
+            remoteRepositoryName = managerConfig.RemoteRepositoryName;
+            timeout = managerConfig.GitTimeout;
+            user = gitConfig.User;
+            server = gitConfig.Server;
+            remoteRepositoryName = gitConfig.RepositoryName;
 
             StartConsoleIfNotExists();
         }
@@ -84,10 +94,7 @@ namespace BranchCheck.Core
                 OnErrorMessageReceived(errors);
         }
 
-
-
-
-
+        
         private void ConsoleCommand(CommandType commandType, 
                                     ref string messages, 
                                     ref string errorMessages, 
@@ -97,8 +104,11 @@ namespace BranchCheck.Core
             var currentCommand = CommandFactory.CommandLookup(commandType,
                                                               consoleProcess,
                                                               promptLine,
+                                                              timeout,
                                                               remoteRepositoryName,
-                                                              branch);
+                                                              branch,
+                                                              user,
+                                                              server);
 
             currentCommand.Execute();
 

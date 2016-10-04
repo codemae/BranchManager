@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
-using System.IO;
 
 namespace BranchCheck.Core.Configuration
 {
@@ -53,7 +50,8 @@ namespace BranchCheck.Core.Configuration
                           ConfigElement.TryGetElementValue(m.Element("RepositoryLocation")),
                           ConfigElement.TryGetElementValue(m.Element("RemoteRepositoryName")),
                           ConfigElement.TryGetElementValue(m.Element("User")),
-                          ConfigElement.TryGetElementValue(m.Element("YouTrackBaseURL"))
+                          ConfigElement.TryGetElementValue(m.Element("YouTrackBaseURL")),
+                          ConfigElement.TryGetElementValue(m.Element("GitTimeoutMilliseconds"))
                       )
                      ).First();
         }

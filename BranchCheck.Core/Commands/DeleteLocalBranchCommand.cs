@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace BranchCheck.Core
 {
@@ -15,8 +10,12 @@ namespace BranchCheck.Core
             private string Remote { get; set; }
             private string Branch { get; set; }
 
-            public DeleteLocalBranchCommand(Process consoleProcess, string promptLine, string remote, string branch)
-                : base(consoleProcess, promptLine)
+            public DeleteLocalBranchCommand(Process consoleProcess, 
+                                            string promptLine, 
+                                            int timeout, 
+                                            string remote, 
+                                            string branch)
+                : base(consoleProcess, promptLine, timeout)
             {
                 Remote = remote;
                 Branch = branch;
@@ -26,7 +25,7 @@ namespace BranchCheck.Core
             {
                 command = String.Format("git branch -D {0}", Branch);
                 consoleProcess.StandardInput.WriteLine(command);
-                Wait();
+                Wait(gitTimeout);
             }
 
             protected override void OnDataReceived(string data)

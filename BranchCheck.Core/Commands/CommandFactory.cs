@@ -11,8 +11,11 @@ namespace BranchCheck.Core
             public static ICommand CommandLookup(CommandType commandType,
                                                  Process consoleProcess,
                                                  string promptLine,
+                                                 int timeout,
                                                  string remoteRepositoryName,
-                                                 string branch)
+                                                 string branch,
+                                                 string user,
+                                                 string server)
             {
                 var commandLookup = new Dictionary<CommandType, Func<ICommand>>
                 {
@@ -20,19 +23,26 @@ namespace BranchCheck.Core
                         CommandType.DeleteRemoteBranch,
                         () => { return new DeleteRemoteBranchCommand(consoleProcess,
                                                                      promptLine,
+                                                                     timeout,
                                                                      remoteRepositoryName,
-                                                                     branch); }
+                                                                     branch,
+                                                                     user,
+                                                                     server); }
                     },
                     {
                         CommandType.DeleteLocalBranch,
                         () => { return new DeleteLocalBranchCommand(consoleProcess,
                                                                     promptLine,
+                                                                    timeout,
                                                                     remoteRepositoryName,
                                                                     branch); }
                     },
                     {
                         CommandType.Prune,
-                        () => { return new PruneCommand(consoleProcess, promptLine, remoteRepositoryName); }
+                        () => { return new PruneCommand(consoleProcess, 
+                                                        promptLine,
+                                                        timeout,
+                                                        remoteRepositoryName); }
                     }
                 };
 
