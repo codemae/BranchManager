@@ -1,4 +1,6 @@
-﻿namespace BranchCheck.Core
+﻿using System;
+
+namespace BranchCheck.Core.GitConsole
 {
     public partial class GitConsole
     {
@@ -9,6 +11,8 @@
             string Messages { get; }
 
             void Execute();
+
+            event EventHandler<CommandEventArgs> PasswordRequestReceived;
         }
     }
 }

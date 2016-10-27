@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
-namespace BranchCheck.Core
+namespace BranchCheck.Core.GitConsole
 {
     public partial class GitConsole : IDisposable
     {
@@ -27,7 +23,7 @@ namespace BranchCheck.Core
                 waitingForConsole = new EventWaitHandle(false, EventResetMode.ManualReset);
             }
 
-            public string GetLine()
+            public string GetPromptLine()
             {
                 consoleProcess.StandardInput.WriteLine("RandomCommand");
                 waitingForConsole.WaitOne();

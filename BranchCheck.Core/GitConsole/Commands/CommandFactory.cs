@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace BranchCheck.Core
+namespace BranchCheck.Core.GitConsole
 {
     public partial class GitConsole
     {

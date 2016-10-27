@@ -1,36 +1,31 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace BranchCheck.Core
+namespace BranchCheck.Core.GitConsole
 {
     public partial class GitConsole
     {
-        private class DeleteRemoteBranchCommand : Command
+        public class DeleteRemoteBranchCommand : Command
         {
             private string Remote { get; set; }
             private string Branch { get; set; }
 
-            private string user;
-            private string server;
-
             public DeleteRemoteBranchCommand(Process consoleProcess, 
                                              string promptLine, 
-                                             int timeout, 
+                                             int timeout,
+                                             string user,
+                                             string server,
                                              string remote, 
-                                             string branch, 
-                                             string user, 
-                                             string server)
-                : base(consoleProcess, promptLine, timeout)
+                                             string branch)
+                : base(consoleProcess, promptLine, timeout, user, server)
             {
                 Remote = remote;
                 Branch = branch;
-                this.user = user;
-                this.server = server;
             }
 
             public override void Execute()
             {
-                command = String.Format("git push {0} :{1}", Remote, Branch);
+                command = string.Format("git push {0} :{1}", Remote, Branch);
                 consoleProcess.StandardInput.WriteLine(command);
                 Wait(gitTimeout);
             }
@@ -38,12 +33,10 @@ namespace BranchCheck.Core
             protected override void OnDataReceived(string data)
             {
                 base.OnDataReceived(data);
-                bool showPasswordPrompt = false;
 
                 // custom error handling
-                var testString = String.Format("{0}@{1}'s password:", user, server);
-                if (data.Contains(testString))
-                    showPasswordPrompt = true;
+                if(passwordHelper.ContainsPasswordPrompt(data))
+                    OnPasswordRequestReceived(user, server);
             }
         }
     }

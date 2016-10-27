@@ -44,15 +44,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CascadeBranch.cs" />
-    <Compile Include="Commands\Command.cs" />
-    <Compile Include="Commands\CommandFactory.cs" />
-    <Compile Include="Commands\DeleteLocalBranchCommand.cs" />
-    <Compile Include="Commands\DeleteRemoteBranchCommand.cs" />
-    <Compile Include="Commands\ICommand.cs" />
-    <Compile Include="Commands\PruneCommand.cs" />
+    <Compile Include="GitConsole\Commands\Command.cs" />
+    <Compile Include="GitConsole\Commands\CommandEventArgs.cs" />
+    <Compile Include="GitConsole\Commands\CommandFactory.cs" />
+    <Compile Include="GitConsole\Commands\DeleteLocalBranchCommand.cs" />
+    <Compile Include="GitConsole\Commands\DeleteRemoteBranchCommand.cs" />
+    <Compile Include="GitConsole\Commands\ICommand.cs" />
+    <Compile Include="GitConsole\Commands\PruneCommand.cs" />
     <Compile Include="Configuration\ConfigFile.cs" />
     <Compile Include="Configuration\ManagerConfig.cs" />
-    <Compile Include="PromptIdentifier.cs" />
+    <Compile Include="GitConsole\ConsoleEventArgs.cs" />
+    <Compile Include="GitConsole\Helper\PasswordHelper.cs" />
+    <Compile Include="GitConsole\Helper\PromptIdentifier.cs" />
     <Compile Include="Git.cs" />
     <Compile Include="GitConsole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

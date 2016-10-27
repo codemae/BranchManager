@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using BranchCheck.Core;
 using BranchCheck.Core.Configuration;
+using BranchCheck.Core.GitConsole;
 
 namespace BranchManager
 {
@@ -14,6 +15,8 @@ namespace BranchManager
         private YouTrack youTrack = null;
         private Git git = null;
         private GitConsole gitConsole = null;
+
+        public event EventHandler<GitConsole.PasswordEventArgs> PasswordReceived;
 
         public MainForm()
         {
@@ -32,7 +35,8 @@ namespace BranchManager
                 gitConsole = new GitConsole(ref managerConfig, git.Config);
                 gitConsole.OutputReceived += Console_OutputReceived;
                 gitConsole.ErrorMessageReceived += Console_ErrorMessageReceived;
-                
+                gitConsole.PasswordRequestReceived += Console_PasswordRequestReceived;
+
                 gitConsole.Prune();
                 
                 branchList.Columns.Add("Name", 100);
@@ -112,7 +116,7 @@ namespace BranchManager
         {
             MethodInvoker action = delegate
             {
-                txtOutput.AppendText(String.Format("{0}\r\n", e.Message));
+                txtOutput.AppendText(string.Format("{0}\r\n", e.Message));
             };
 
             this.BeginInvoke(action);
@@ -121,6 +125,13 @@ namespace BranchManager
         private void Console_ErrorMessageReceived(object sender, ConsoleEventArgs e)
         {
             MessageBox.Show(e.Message);
+        }
+
+        private void Console_PasswordRequestReceived(object sender, GitConsole.CommandEventArgs e)
+        {
+            MessageBox.Show(string.Format("Please enter {0}:{1}'s password: ", e.User, e.Server));
+
+            e.Password = "test";
         }
     }
 }

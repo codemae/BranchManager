@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace BranchCheck.Core
+namespace BranchCheck.Core.GitConsole
 {
     public partial class GitConsole
     {
-        private class DeleteLocalBranchCommand : Command
+        public class DeleteLocalBranchCommand : Command
         {
             private string Remote { get; set; }
             private string Branch { get; set; }
@@ -13,9 +13,11 @@ namespace BranchCheck.Core
             public DeleteLocalBranchCommand(Process consoleProcess, 
                                             string promptLine, 
                                             int timeout, 
+                                            string user,
+                                            string server,
                                             string remote, 
                                             string branch)
-                : base(consoleProcess, promptLine, timeout)
+                : base(consoleProcess, promptLine, timeout, user, server)
             {
                 Remote = remote;
                 Branch = branch;
@@ -23,7 +25,7 @@ namespace BranchCheck.Core
 
             public override void Execute()
             {
-                command = String.Format("git branch -D {0}", Branch);
+                command = string.Format("git branch -D {0}", Branch);
                 consoleProcess.StandardInput.WriteLine(command);
                 Wait(gitTimeout);
             }

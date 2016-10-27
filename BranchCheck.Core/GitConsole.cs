@@ -2,18 +2,8 @@
 using System.Diagnostics;
 using BranchCheck.Core.Configuration;
 
-namespace BranchCheck.Core
+namespace BranchCheck.Core.GitConsole
 {
-    public class ConsoleEventArgs : EventArgs
-    {
-        public string Message { get; private set; }
-
-        public ConsoleEventArgs(string message)
-        {
-            Message = message;
-        }
-    }
-
     public partial class GitConsole : IDisposable
     {
         private readonly string repositoryPath;
@@ -27,6 +17,7 @@ namespace BranchCheck.Core
 
         public event EventHandler<ConsoleEventArgs> OutputReceived;
         public event EventHandler<ConsoleEventArgs> ErrorMessageReceived;
+        public event EventHandler<CommandEventArgs> PasswordRequestReceived;
 
         public enum DeleteType
         {
@@ -38,10 +29,8 @@ namespace BranchCheck.Core
         {
             DeleteRemoteBranch,
             DeleteLocalBranch,
-            Status,
             Prune
         }
-
 
         public GitConsole(ref ManagerConfig managerConfig, GitConfig gitConfig)
         {
@@ -71,8 +60,8 @@ namespace BranchCheck.Core
         {
             if (branch == null) throw new ArgumentNullException("branch");
 
-            string messages = String.Empty;
-            string errors = String.Empty;
+            string messages = string.Empty;
+            string errors = string.Empty;
 
             if (deleteType != DeleteType.Local)
                 ConsoleCommand(CommandType.DeleteRemoteBranch, ref messages, ref errors, branch.FriendlyName);
@@ -80,25 +69,21 @@ namespace BranchCheck.Core
             if (deleteType != DeleteType.Remote)
                 ConsoleCommand(CommandType.DeleteLocalBranch, ref messages, ref errors, branch.FriendlyName);
 
-            if (errors != String.Empty)
+            if (errors != string.Empty)
                 OnErrorMessageReceived(errors);
         }
 
         public void Prune()
         {
-            string messages = String.Empty;
-            string errors = String.Empty;
+            string messages = string.Empty;
+            string errors = string.Empty;
             ConsoleCommand(CommandType.Prune, ref messages, ref errors);
 
-            if (errors != String.Empty)
+            if (errors != string.Empty)
                 OnErrorMessageReceived(errors);
         }
 
-        
-        private void ConsoleCommand(CommandType commandType, 
-                                    ref string messages, 
-                                    ref string errorMessages, 
-                                    string branch = null)
+        private void ConsoleCommand(CommandType commandType, ref string messages, ref string errorMessages, string branch = null)
         {
             StartConsoleIfNotExists();
             var currentCommand = CommandFactory.CommandLookup(commandType,
@@ -111,6 +96,8 @@ namespace BranchCheck.Core
                                                               server);
 
             currentCommand.Execute();
+
+            currentCommand.PasswordRequestReceived += Command_PasswordRequestReceived;
 
             messages += currentCommand.Messages;
             errorMessages += currentCommand.ErrorMessages;
@@ -157,16 +144,22 @@ namespace BranchCheck.Core
 
         private void OnOutputReceived(string data)
         {
-            EventHandler<ConsoleEventArgs> handler = OutputReceived;
-            if (handler != null)
-                handler(this, new ConsoleEventArgs(data));
+            OutputReceived?.Invoke(this, new ConsoleEventArgs(data));
         }
 
         private void OnErrorMessageReceived(string data)
         {
-            EventHandler<ConsoleEventArgs> handler = ErrorMessageReceived;
-            if (handler != null)
-                handler(this, new ConsoleEventArgs(data));
+            ErrorMessageReceived?.Invoke(this, new ConsoleEventArgs(data));
+        }
+
+        private void Command_PasswordRequestReceived(object sender, CommandEventArgs e)
+        {
+            OnPasswordRequestReceived(e);
+        }
+
+        private void OnPasswordRequestReceived(CommandEventArgs e)
+        {
+            PasswordRequestReceived?.Invoke(this, e);
         }
     }
 }

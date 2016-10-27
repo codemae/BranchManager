@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace BranchCheck.Core
+namespace BranchCheck.Core.GitConsole
 {
     public partial class GitConsole
     {
-        private class PruneCommand : Command
+        public class PruneCommand : Command
         {
             private string Remote { get; set; }
 
-            public PruneCommand(Process consoleProcess, string promptLine, int timeout, string remote) 
-                : base(consoleProcess, promptLine, timeout)
+            public PruneCommand(Process consoleProcess, string promptLine, int timeout, string remote, string user, string server) 
+                : base(consoleProcess, promptLine, timeout, user, server)
             {
                 Remote = remote;
             }
 
             public override void Execute()
             {
-                command = String.Format("git remote prune {0}", Remote);
+                command = string.Format("git remote prune {0}", Remote);
                 consoleProcess.StandardInput.WriteLine(command);
                 Wait(gitTimeout);
             }
