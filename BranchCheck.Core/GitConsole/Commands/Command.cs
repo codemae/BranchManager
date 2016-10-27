@@ -11,10 +11,7 @@ namespace BranchCheck.Core.GitConsole
             private EventWaitHandle waitingForConsole;
             protected PasswordHelper passwordHelper = null;
             protected Process consoleProcess = null;
-            protected string promptLine = string.Empty;
             protected string command = string.Empty;
-            protected string user = string.Empty;
-            protected string server = string.Empty;
             protected int gitTimeout;
 
             public event EventHandler<CommandEventArgs> PasswordRequestReceived;
@@ -32,7 +29,6 @@ namespace BranchCheck.Core.GitConsole
                 if (string.IsNullOrEmpty(server)) throw new ArgumentNullException("server");
 
                 this.consoleProcess = consoleProcess;
-                this.promptLine = promptLine;
                 this.Messages = string.Empty;
                 this.ErrorMessages = string.Empty;
                 this.gitTimeout = timeout;
@@ -42,17 +38,17 @@ namespace BranchCheck.Core.GitConsole
                 var passwordHelper = new PasswordHelper(consoleProcess, promptLine, user, server);
             }
 
+            public abstract void Execute();
+
             public void Dispose()
             {
                 consoleProcess.OutputDataReceived -= ConsoleProcess_OutputDataReceived;
                 consoleProcess.ErrorDataReceived -= ConsoleProcess_OutputDataReceived;
             }
 
-            public abstract void Execute();
-
             protected virtual void OnDataReceived(string data)
             {
-                if (data == promptLine)
+                if (data == passwordHelper.PromptLine)
                 {
                     Continue();
                     return;
@@ -64,9 +60,9 @@ namespace BranchCheck.Core.GitConsole
                 Messages += string.Format("{0}\r\n", data);
             }
 
-            protected virtual void OnPasswordRequestReceived(string user, string server)
+            protected virtual void OnPasswordRequestReceived()
             {
-                var e = new CommandEventArgs(user, server);
+                var e = new CommandEventArgs(passwordHelper.User, passwordHelper.Server);
                 bool passwordSuccess = false;
 
                 do {
@@ -76,14 +72,9 @@ namespace BranchCheck.Core.GitConsole
                 while (passwordSuccess == false && e.Abort == false);
 
                 if (e.Abort)
-                    AbortCommand?.Invoke(this, new EventArgs("Failed password"));
+                    AbortCommand?.Invoke(this, new EventArgs());
                 else
                     Execute();
-            }
-
-            protected virtual void OnAbortRequestReceived(string message)
-            {
-
             }
 
             protected void Wait(int timeout = 0)

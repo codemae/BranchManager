@@ -13,6 +13,7 @@ namespace BranchCheck.Core.GitConsole
             void Execute();
 
             event EventHandler<CommandEventArgs> PasswordRequestReceived;
+            event EventHandler<EventArgs> AbortCommand;
         }
     }
 }

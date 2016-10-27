@@ -16,8 +16,6 @@ namespace BranchManager
         private Git git = null;
         private GitConsole gitConsole = null;
 
-        public event EventHandler<GitConsole.PasswordEventArgs> PasswordReceived;
-
         public MainForm()
         {
             InitializeComponent();

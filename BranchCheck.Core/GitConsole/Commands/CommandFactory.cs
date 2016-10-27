@@ -12,10 +12,10 @@ namespace BranchCheck.Core.GitConsole
                                                  Process consoleProcess,
                                                  string promptLine,
                                                  int timeout,
-                                                 string remoteRepositoryName,
-                                                 string branch,
                                                  string user,
-                                                 string server)
+                                                 string server,
+                                                 string remoteRepositoryName,
+                                                 string branch)
             {
                 var commandLookup = new Dictionary<CommandType, Func<ICommand>>
                 {
@@ -24,16 +24,18 @@ namespace BranchCheck.Core.GitConsole
                         () => { return new DeleteRemoteBranchCommand(consoleProcess,
                                                                      promptLine,
                                                                      timeout,
-                                                                     remoteRepositoryName,
-                                                                     branch,
                                                                      user,
-                                                                     server); }
+                                                                     server,
+                                                                     remoteRepositoryName,
+                                                                     branch); }
                     },
                     {
                         CommandType.DeleteLocalBranch,
                         () => { return new DeleteLocalBranchCommand(consoleProcess,
                                                                     promptLine,
                                                                     timeout,
+                                                                    user,
+                                                                    server,
                                                                     remoteRepositoryName,
                                                                     branch); }
                     },
@@ -42,6 +44,8 @@ namespace BranchCheck.Core.GitConsole
                         () => { return new PruneCommand(consoleProcess, 
                                                         promptLine,
                                                         timeout,
+                                                        user,
+                                                        server,
                                                         remoteRepositoryName); }
                     }
                 };

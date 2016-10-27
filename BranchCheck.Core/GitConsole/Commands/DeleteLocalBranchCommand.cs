@@ -8,6 +8,7 @@ namespace BranchCheck.Core.GitConsole
         public class DeleteLocalBranchCommand : Command
         {
             private string Remote { get; set; }
+
             private string Branch { get; set; }
 
             public DeleteLocalBranchCommand(Process consoleProcess, 

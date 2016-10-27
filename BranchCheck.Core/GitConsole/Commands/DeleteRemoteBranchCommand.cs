@@ -32,11 +32,10 @@ namespace BranchCheck.Core.GitConsole
 
             protected override void OnDataReceived(string data)
             {
-                base.OnDataReceived(data);
+                if (passwordHelper.ContainsPasswordPrompt(data))
+                    OnPasswordRequestReceived();
 
-                // custom error handling
-                if(passwordHelper.ContainsPasswordPrompt(data))
-                    OnPasswordRequestReceived(user, server);
+                base.OnDataReceived(data);
             }
         }
     }

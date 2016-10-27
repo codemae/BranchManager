@@ -90,14 +90,15 @@ namespace BranchCheck.Core.GitConsole
                                                               consoleProcess,
                                                               promptLine,
                                                               timeout,
-                                                              remoteRepositoryName,
-                                                              branch,
                                                               user,
-                                                              server);
+                                                              server,
+                                                              remoteRepositoryName,
+                                                              branch);
 
             currentCommand.Execute();
 
             currentCommand.PasswordRequestReceived += Command_PasswordRequestReceived;
+            currentCommand.AbortCommand += Command_AbortRequestReceived;
 
             messages += currentCommand.Messages;
             errorMessages += currentCommand.ErrorMessages;
@@ -130,7 +131,7 @@ namespace BranchCheck.Core.GitConsole
             consoleProcess.BeginOutputReadLine();
             consoleProcess.BeginErrorReadLine();
 
-            promptLine = promptIdentifier.GetLine();
+            promptLine = promptIdentifier.GetPromptLine();
         }
 
         private void ConsoleProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
@@ -154,12 +155,13 @@ namespace BranchCheck.Core.GitConsole
 
         private void Command_PasswordRequestReceived(object sender, CommandEventArgs e)
         {
-            OnPasswordRequestReceived(e);
+            PasswordRequestReceived?.Invoke(this, e);
         }
 
-        private void OnPasswordRequestReceived(CommandEventArgs e)
+        private void Command_AbortRequestReceived(object sender, EventArgs e)
         {
-            PasswordRequestReceived?.Invoke(this, e);
+            Command command = sender as Command;
+            command.Dispose();
         }
     }
 }
